@@ -1,5 +1,5 @@
 import loginImg from "../../assets/images/beauty salon.jpg";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import RightDivImg from "../../assets/images/login-img.jpg";
 
 import { IoEye } from "react-icons/io5";
@@ -11,14 +11,15 @@ import { toast } from "react-toastify";
 import LoginComponents from "./login/components/login-comp";
 import { localValue } from "../../lib/local-storage-service";
 import { api_user_login } from "../../network/api/login-api";
+import { api_user_get_details_by_id } from "../../network/api/user-api";
 
 interface IAuth {
-  email: string;
+  username: string;
   password: string;
 }
 
 const Login = () => {
-  const [user, setUser] = useState<IAuth>({ email: "", password: "" });
+  const [user, setUser] = useState<IAuth>({ username: "", password: "" });
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,46 +37,59 @@ const Login = () => {
       "Here’s to a salon where beauty meets confidence, and every visit leaves you glowing—inside and out! 🥂✨"
     );
 
-  const User = { email: user.email, password: user.password };
+  const User = { username: user.username, password: user.password };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log("call me");
     e.preventDefault();
     // const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (user.email === "" || user.password === "") {
+    if (user.username === "" || user.password === "") {
       return notify();
     }
 
     // console.log(User.email);
 
-    setIsLoading(true);
+    loginUser();
 
-    setTimeout(() => {
-      const matchUser = UserData.find(
-        (value) =>
-          value.email === User.email && value.password === User.password
-      );
-      setIsLoading(false);
-      if (matchUser) {
-        setUser({ email: "", password: "" });
-        localStorage.setItem(localValue.storage_key, JSON.stringify({ User }));
-        successNotify();
-        return navigate("/home", { replace: true });
-      }
-      return checkNotify();
-    }, 2000);
+    // setTimeout(() => {
+    //   const matchUser = UserData.find(
+    //     (value) =>
+    //       value.email === User.email && value.password === User.password
+    //   );
+    //   setIsLoading(false);
+    //   if (matchUser) {
+    //     setUser({ email: "", password: "" });
+    //     localStorage.setItem(localValue.storage_key, JSON.stringify({ User }));
+    //     successNotify();
+    //     return navigate("/home", { replace: true });
+    //   }
+    //   return checkNotify();
+    // }, 2000);
   };
 
   const handleChangeData = (value: string, name: keyof typeof user) => {
     setUser((previous) => ({ ...previous, [name]: value }));
   };
 
+  const loginUser = async () => {
+    setIsLoading(true);
+    const res = await api_user_login({
+      username: user.username,
+      password: user.password,
+    });
 
-  const loginUser = async()=>{
-    const res = api_user_login({ username: user.email, password:user.password });
-  }
- 
+    if (res && res.s) {
+      const user = await api_user_get_details_by_id("1");
+
+      if(user && user.s && user.r){
+        console.log("User", user.r.name.firstname)
+        alert(user.r.name.firstname)
+      }
+    } else {
+      alert(res.m ?? "Opps!");
+    }
+    setIsLoading(false);
+  };
 
   return (
     <div className="bg-[#E6B5B0] w-full h-screen flex items-center justify-center">
@@ -118,10 +132,10 @@ const Login = () => {
             /> */}
 
             <LoginComponents
-              type="email"
-              name="email"
-              value={user.email}
-              placeholder="Enter your glow-mail 💌"
+              type="text"
+              name="username"
+              value={user.username}
+              placeholder="Enter your username 💌"
               onChange={handleChangeData}
             />
 
@@ -133,16 +147,16 @@ const Login = () => {
               onChange={handleChangeData}
               rightIcon={
                 <button
-              type="button"
-              className="absolute ml-67 mt-[74px]"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <FaEyeSlash className="text-[20px]" />
-              ) : (
-                <IoEye className="text-[20px]" />
-              )}
-            </button>
+                  type="button"
+                  className="absolute ml-67 mt-[74px]"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="text-[20px]" />
+                  ) : (
+                    <IoEye className="text-[20px]" />
+                  )}
+                </button>
               }
             />
 
