@@ -7,6 +7,10 @@ import DataFetchApi from "../pages/data-fetch";
 import { localValue } from "../lib/local-storage-service";
 import Payment from "../pages/authenticated/payment";
 import AllProductDetails from "../pages/authenticated/product/details-page/all-product-details";
+import LoginLearning from "../api-learning/log-in/login-learning";
+import SignUpLearning from "../api-learning/sign-up/sign-up-learning";
+import ProductLearning from "../api-learning/product/product-learning";
+import NewFormLearning from "../components/new-form-leaqrning";
 
 
 const HomePage = lazy(() => import("../pages/home"));
@@ -68,14 +72,46 @@ export const Route = createBrowserRouter([
     ),
   },
   {
-    loader :()=>{
-        console.log("loader is calling");
-        const user = localStorage.getItem(localValue.storage_key);
-        if(!user){
-          return redirect("/");
-        }
-        return true;
-      },
+    path: "new-form",
+    element: (
+      <CommonSuspence>
+        <NewFormLearning/>
+      </CommonSuspence>
+    ),
+  },
+  {
+    path: "login-learn",
+    element: (
+      <CommonSuspence>
+        <LoginLearning/>
+      </CommonSuspence>
+    ),
+  },
+  {
+    path: "signup-learn",
+    element: (
+      <CommonSuspence>
+        <SignUpLearning/>
+      </CommonSuspence>
+    ),
+  },
+  {
+    path: "product-learning",
+    element: (
+      <CommonSuspence>
+        <ProductLearning/>
+      </CommonSuspence>
+    ),
+  },
+  {
+    // loader :()=>{
+    //     console.log("loader is calling");
+    //     const user = localStorage.getItem(localValue.storage_key);
+    //     if(!user){
+    //       return redirect("/");
+    //     }
+    //     return true;
+    //   },
     path: "home",
     element: (
       <CommonSuspence>

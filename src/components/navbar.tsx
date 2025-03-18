@@ -21,7 +21,7 @@ const Navbar = () => {
     }
 
     const handleApiCalling=()=>{
-      navigation("/api-calling")
+      navigation("/new-form")
       
     }
 
@@ -31,7 +31,7 @@ const Navbar = () => {
 
       <button className="font-semibold border-2 pt-2 pb-2 pr-5 pl-5 rounded-lg cursor-pointer" onClick={handlePrice}>Buy</button>
 
-      <button  className="font-semibold border-2 pt-2 pb-2 pr-5 pl-5 rounded-lg cursor-pointer" onClick={handleApiCalling}>API CALLING</button>
+      <button  className="font-semibold border-2 pt-2 pb-2 pr-5 pl-5 rounded-lg cursor-pointer" onClick={handleApiCalling}>React Hook Form</button>
     </div>
   )
 }

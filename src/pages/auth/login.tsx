@@ -12,6 +12,8 @@ import LoginComponents from "./login/components/login-comp";
 import { localValue } from "../../lib/local-storage-service";
 import { api_user_login } from "../../network/api/login-api";
 import { api_user_get_details_by_id } from "../../network/api/user-api";
+import Product from "../product";
+import { api_product_get_details_by_id } from "../../network/api/product-api";
 
 interface IAuth {
   username: string;
@@ -41,13 +43,9 @@ const Login = () => {
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    // const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
     if (user.username === "" || user.password === "") {
       return notify();
     }
-
-    // console.log(User.email);
 
     loginUser();
 
@@ -77,18 +75,27 @@ const Login = () => {
       username: user.username,
       password: user.password,
     });
-
+    console.log(res.s)
+    // console.log(res)
     if (res && res.s) {
       const user = await api_user_get_details_by_id("1");
-
+      console.log(user)
       if(user && user.s && user.r){
-        console.log("User", user.r.name.firstname)
-        alert(user.r.name.firstname)
+        localStorage.setItem("user",JSON.stringify(user.r));
+        return navigate("/home")
       }
-    } else {
-      alert(res.m ?? "Opps!");
+      // else{
+      //   const product = await api_product_get_details_by_id("1")
+      //   if(product && product.s && product.r){
+      //     return alert(product.r.title)
+      //   }
+      // }
+    } 
+    else {
+      setIsLoading(false);
+      return alert(res.m ?? "Opps!");
     }
-    setIsLoading(false);
+    
   };
 
   return (
@@ -160,31 +167,6 @@ const Login = () => {
               }
             />
 
-            {/* <input
-              required
-              type={showPassword ? "text" : "password"}
-              className="text-[#5A2A5B] pt-2 pb-2 pl-8 pr-8 rounded-lg border-2"
-              placeholder="Unlock the glow 🔐"
-              value={user.password}
-              onChange={(e) => {
-                setUser((p) => ({
-                  ...p,
-                  password: e.target.value,
-                }));
-              }}
-            />
-
-            <button
-              type="button"
-              className="absolute ml-67 mt-[74px]"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <FaEyeSlash className="text-[20px]" />
-              ) : (
-                <IoEye className="text-[20px]" />
-              )}
-            </button> */}
 
             <button
               disabled={isLoading}

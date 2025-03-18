@@ -17,6 +17,7 @@ const NewToWebSite = () => {
           <button
             className="border-3 border-[#F8C8DC] pt-2 pb-2 pl-5 pr-5 rounded-md font-[paris] font-semibold text-[25px] bg-[#5A2A5B] text-[#FAF5F8]"
             onClick={() => {
+              
               navigation("/login");
             }}
           >

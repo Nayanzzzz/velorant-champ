@@ -11,5 +11,6 @@ export const Urls = {
 
   // Product
   getAllProductList: "/products",
-  getProductDetails: (id: number | string) => `/products/${id}`,
+  getProductDetails: (id: number | string | undefined) => `/products/${id}`,
 };
+
